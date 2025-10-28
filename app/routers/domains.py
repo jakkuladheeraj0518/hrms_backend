@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from app.database import get_db
-from app.models import Domain, Company
-from app.schemas import Domain as DomainSchema, DomainCreate, DomainUpdate
+from app.models.superadmin import Domain, Company
+from app.schemas.superadmin import Domain as DomainSchema, DomainCreate, DomainUpdate
 
 router = APIRouter(prefix="/api/domains", tags=["Domains"])
 

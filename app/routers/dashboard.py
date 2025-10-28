@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 import calendar
 
 from app.database import get_db
-from app.models import Company, Transaction, Subscription, Package
-from app.schemas import (
+from app.models.superadmin import Company, Transaction, Subscription, Package
+from app.schemas.superadmin import (
     DashboardResponse,
     DashboardStatsResponse,
     RevenueDataPoint,

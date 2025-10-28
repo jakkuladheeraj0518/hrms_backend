@@ -5,8 +5,8 @@ from typing import List, Optional
 from datetime import datetime
 
 from app.database import get_db
-from app.models import Company
-from app.schemas import Company as CompanySchema, CompanyCreate, CompanyUpdate
+from app.models.superadmin import Company
+from app.schemas.superadmin import Company as CompanySchema, CompanyCreate, CompanyUpdate
 
 router = APIRouter(prefix="/api/companies", tags=["Companies"])
 

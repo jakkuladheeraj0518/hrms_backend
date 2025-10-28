@@ -5,8 +5,8 @@ from typing import List, Optional
 from datetime import datetime
 
 from app.database import get_db
-from app.models import Transaction, Company
-from app.schemas import Transaction as TransactionSchema, TransactionCreate, TransactionUpdate
+from app.models.superadmin import Transaction, Company
+from app.schemas.superadmin import Transaction as TransactionSchema, TransactionCreate, TransactionUpdate
 
 router = APIRouter(prefix="/api/transactions", tags=["Transactions"])
 

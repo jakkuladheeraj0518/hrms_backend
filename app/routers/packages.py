@@ -4,8 +4,8 @@ from sqlalchemy import func
 from typing import List, Optional
 
 from app.database import get_db
-from app.models import Package, Subscription
-from app.schemas import Package as PackageSchema, PackageCreate, PackageUpdate
+from app.models.superadmin import Package, Subscription
+from app.schemas.superadmin import Package as PackageSchema, PackageCreate, PackageUpdate
 
 router = APIRouter(prefix="/api/packages", tags=["Packages"])
 
