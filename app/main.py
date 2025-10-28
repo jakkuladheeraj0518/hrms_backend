@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import create_tables
 
 # Import routers
-from app.routers import dashboard, companies, domains, packages, transactions, subscriptions
+from app.routers.superadmin import dashboard, companies, domains, packages, transactions, subscriptions
 
 # Create FastAPI app
 app = FastAPI(
