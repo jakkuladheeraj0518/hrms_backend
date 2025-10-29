@@ -4,9 +4,10 @@ from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 import os
 
-from app.database import engine, Base
+from app.database.base import Base
+from app.database.session import engine
 from app.config import settings
-from app.routers.superadmin import (
+from app.api.v1.routers.superadmin import (
     dashboard,
     companies,
     packages,
