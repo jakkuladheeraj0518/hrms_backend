@@ -48,17 +48,16 @@ class Company(CompanyBase):
 # Domain Schemas
 class DomainBase(BaseModel):
     domain_url: str
-    plan: Optional[str] = None
+    plan_name: Optional[str] = None  # ✅ changed from `plan`
     plan_type: Optional[str] = None
     price: float = 0.0
-    
 
 class DomainCreate(DomainBase):
     company_id: int
 
 class DomainUpdate(BaseModel):
     domain_url: Optional[str] = None
-    plan: Optional[str] = None
+    plan_name: Optional[str] = None   # ✅ changed from `plan`
     plan_type: Optional[str] = None
     status: Optional[str] = None
     price: Optional[float] = None
@@ -70,58 +69,65 @@ class Domain(DomainBase):
     status: str
     created_date: date
     expiring_on: Optional[date] = None
-    
+
     class Config:
         from_attributes = True
 
 # Package Schemas
+
 class PackageBase(BaseModel):
     name: str
-    type: str
+    plan_type: str
     price: float
     position: Optional[int] = None
     currency: str = "USD"
     discount_type: Optional[str] = None
     discount: float = 0.0
-    limitations_invoices: Optional[int] = None
+    max_invoices: Optional[int] = None
     max_customers: Optional[int] = None
-    product: Optional[int] = None
-    supplier: Optional[int] = None
+    max_products: Optional[int] = None
+    max_suppliers: Optional[int] = None
     trial_days: int = 0
     is_recommended: bool = False
+    access_trial: bool = False
     status: str = "Active"
     description: Optional[str] = None
     modules: Optional[str] = None
     logo: Optional[str] = None
 
+
 class PackageCreate(PackageBase):
     pass
 
+
 class PackageUpdate(BaseModel):
     name: Optional[str] = None
-    type: Optional[str] = None
+    plan_type: Optional[str] = None
     price: Optional[float] = None
     position: Optional[int] = None
     currency: Optional[str] = None
     discount_type: Optional[str] = None
     discount: Optional[float] = None
-    limitations_invoices: Optional[int] = None
+    max_invoices: Optional[int] = None
     max_customers: Optional[int] = None
-    product: Optional[int] = None
-    supplier: Optional[int] = None
+    max_products: Optional[int] = None
+    max_suppliers: Optional[int] = None
     trial_days: Optional[int] = None
     is_recommended: Optional[bool] = None
+    access_trial: Optional[bool] = None
     status: Optional[str] = None
     description: Optional[str] = None
     modules: Optional[str] = None
     logo: Optional[str] = None
 
+
 class Package(PackageBase):
     id: int
     created_date: date
-    
+
     class Config:
         from_attributes = True
+
 
 # Transaction Schemas
 class TransactionBase(BaseModel):
@@ -164,29 +170,34 @@ class Transaction(TransactionBase):
 class SubscriptionBase(BaseModel):
     company_id: int
     package_id: Optional[int] = None
-    plan: str
+    plan_name: str
+    plan_type: str
     billing_cycle: str
     payment_method: Optional[str] = None
     amount: float
     status: str = "Paid"
     expiring_on: Optional[date] = None
 
+
 class SubscriptionCreate(SubscriptionBase):
     pass
 
+
 class SubscriptionUpdate(BaseModel):
     package_id: Optional[int] = None
-    plan: Optional[str] = None
+    plan_name: Optional[str] = None
+    plan_type: Optional[str] = None
     billing_cycle: Optional[str] = None
     payment_method: Optional[str] = None
     amount: Optional[float] = None
     status: Optional[str] = None
     expiring_on: Optional[date] = None
 
+
 class Subscription(SubscriptionBase):
     id: int
     created_date: date
-    
+
     class Config:
         from_attributes = True
 
