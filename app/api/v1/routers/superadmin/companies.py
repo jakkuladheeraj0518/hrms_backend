@@ -6,7 +6,7 @@ from datetime import datetime
 
 from app.database import get_db
 from app.models.superadmin import Company
-from app.schemas.superadmin import Company as CompanySchema, CompanyCreate, CompanyUpdate
+from app.schemas.superadmin import CompanyResponse as CompanySchema, CompanyCreate, CompanyUpdate
 
 router = APIRouter(prefix="/api/companies", tags=["Companies"])
 

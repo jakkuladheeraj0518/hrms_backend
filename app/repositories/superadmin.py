@@ -3,7 +3,7 @@ from sqlalchemy import func, and_, or_, desc
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timedelta
 from app.models.superadmin import (
-    Company, Package, PackageModule, Subscription, Transaction, Domain,
+    Company, Package, Subscription, Transaction, Domain,
     CompanyStatus, PaymentStatus, DomainStatus, PlanName, PlanType
 )
 

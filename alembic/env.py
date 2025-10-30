@@ -5,6 +5,7 @@ from app.config import settings
 from app.database.base import Base
 from app.models.superadmin import Company, Domain, Package, Transaction, Subscription
 import app.models.payroll_models
+import app.models.datacapture
 # Interpret the config file for Python logging.
 config = context.config
 fileConfig(config.config_file_name)

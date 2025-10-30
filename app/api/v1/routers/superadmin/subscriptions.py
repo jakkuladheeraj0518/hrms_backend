@@ -6,7 +6,7 @@ from datetime import datetime, date
 
 from app.database import get_db
 from app.models.superadmin import Subscription, Company, Package
-from app.schemas.superadmin import Subscription as SubscriptionSchema, SubscriptionCreate, SubscriptionUpdate
+from app.schemas.superadmin import SubscriptionResponse as SubscriptionSchema, SubscriptionCreate, SubscriptionUpdate
 
 router = APIRouter(prefix="/api/subscriptions", tags=["Subscriptions"])
 

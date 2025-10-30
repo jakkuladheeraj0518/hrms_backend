@@ -6,7 +6,7 @@ from datetime import datetime
 
 from app.database import get_db
 from app.models.superadmin import Transaction, Company
-from app.schemas.superadmin import Transaction as TransactionSchema, TransactionCreate, TransactionUpdate
+from app.schemas.superadmin import TransactionResponse as TransactionSchema, TransactionCreate, TransactionUpdate
 
 router = APIRouter(prefix="/api/transactions", tags=["Transactions"])
 

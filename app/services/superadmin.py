@@ -11,13 +11,13 @@ from app.schemas.superadmin import (
     SubscriptionCreate, SubscriptionResponse,
     TransactionCreate, TransactionResponse,
     DomainCreate, DomainUpdate, DomainResponse,
-    DashboardStats, CompanyStats, FilterParams
+    DashboardStatsResponse
 )
 from app.utils.superadmin import hash_password, generate_invoice_id, calculate_expiry_date
 
 class DashboardService:
     @staticmethod
-    def get_dashboard_stats(db: Session) -> DashboardStats:
+    def get_dashboard_stats(db: Session) -> DashboardStatsResponse:
         """Get comprehensive dashboard statistics"""
         total_companies = CompanyRepository.get_count(db)
         active_companies = CompanyRepository.get_active_count(db)
@@ -28,7 +28,7 @@ class DashboardService:
         total_earnings = TransactionRepository.get_total_earnings(db)
         total_transactions = TransactionRepository.get_count(db)
         
-        return DashboardStats(
+        return DashboardStatsResponse(
             total_companies=total_companies,
             active_companies=active_companies,
             inactive_companies=inactive_companies,
@@ -40,18 +40,17 @@ class DashboardService:
         )
     
     @staticmethod
-    def get_company_stats(db: Session) -> CompanyStats:
+    def get_company_stats(db: Session) -> dict:
         """Get company/package statistics"""
         total_plans = PackageRepository.get_count(db)
         active_plans = PackageRepository.get_count(db, {'status': 'Active'})
         inactive_plans = total_plans - active_plans
-        
-        return CompanyStats(
-            total_plans=total_plans,
-            active_plans=active_plans,
-            inactive_plans=inactive_plans,
-            plan_types=2  # Monthly and Yearly
-        )
+        return {
+            'total_plans': total_plans,
+            'active_plans': active_plans,
+            'inactive_plans': inactive_plans,
+            'plan_types': 2  # Monthly and Yearly
+        }
 
 class CompanyService:
     @staticmethod
@@ -59,10 +58,10 @@ class CompanyService:
         db: Session,
         skip: int = 0,
         limit: int = 100,
-        filters: Optional[FilterParams] = None
+        filters: Optional[dict] = None
     ) -> List[CompanyResponse]:
         """Get all companies with optional filters"""
-        filter_dict = filters.dict(exclude_none=True) if filters else None
+        filter_dict = filters or None
         companies = CompanyRepository.get_all(db, skip, limit, filter_dict)
         return [CompanyResponse.from_orm(c) for c in companies]
     
@@ -136,10 +135,10 @@ class PackageService:
         db: Session,
         skip: int = 0,
         limit: int = 100,
-        filters: Optional[FilterParams] = None
+        filters: Optional[dict] = None
     ) -> List[PackageResponse]:
         """Get all packages with optional filters"""
-        filter_dict = filters.dict(exclude_none=True) if filters else None
+        filter_dict = filters or None
         packages = PackageRepository.get_all(db, skip, limit, filter_dict)
         return [PackageResponse.from_orm(p) for p in packages]
     
@@ -192,10 +191,10 @@ class SubscriptionService:
         db: Session,
         skip: int = 0,
         limit: int = 100,
-        filters: Optional[FilterParams] = None
+        filters: Optional[dict] = None
     ) -> List[SubscriptionResponse]:
         """Get all subscriptions with optional filters"""
-        filter_dict = filters.dict(exclude_none=True) if filters else None
+        filter_dict = filters or None
         subscriptions = SubscriptionRepository.get_all(db, skip, limit, filter_dict)
         return [SubscriptionResponse.from_orm(s) for s in subscriptions]
     
@@ -223,10 +222,10 @@ class TransactionService:
         db: Session,
         skip: int = 0,
         limit: int = 100,
-        filters: Optional[FilterParams] = None
+        filters: Optional[dict] = None
     ) -> List[TransactionResponse]:
         """Get all transactions with optional filters"""
-        filter_dict = filters.dict(exclude_none=True) if filters else None
+        filter_dict = filters or None
         transactions = TransactionRepository.get_all(db, skip, limit, filter_dict)
         return [TransactionResponse.from_orm(t) for t in transactions]
     
@@ -272,10 +271,10 @@ class DomainService:
         db: Session,
         skip: int = 0,
         limit: int = 100,
-        filters: Optional[FilterParams] = None
+        filters: Optional[dict] = None
     ) -> List[DomainResponse]:
         """Get all domains with optional filters"""
-        filter_dict = filters.dict(exclude_none=True) if filters else None
+        filter_dict = filters or None
         domains = DomainRepository.get_all(db, skip, limit, filter_dict)
         return [DomainResponse.from_orm(d) for d in domains]
     

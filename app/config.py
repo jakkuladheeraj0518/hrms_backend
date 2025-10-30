@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings
 from typing import Optional, List
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "postgresql://postgres:1234@localhost:5432/superadmin_db"
+    DATABASE_URL: str = "postgresql://postgres:12345678@localhost:5432/superadmin_db"
     SECRET_KEY: str = "your-secret-key-change-in-production"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     # ==========================
     # DATABASE SETTINGS
     # ==========================
-    DATABASE_URL: str = "postgresql://postgres:1234@localhost:5432/superadmin_db"
+    DATABASE_URL: str = "postgresql://postgres:12345678@localhost:5432/superadmin_db"
 
     # ==========================
     # SECURITY SETTINGS
