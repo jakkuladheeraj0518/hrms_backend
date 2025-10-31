@@ -49,6 +49,21 @@ from app.api.v1.routers.datacapture import (
     it_declaration,
     tds_returns,
 )
+from app.api.v1.routers.requests import (
+    leave_request,
+    missed_punch_request,
+    compoff,
+    helpdesk,
+    claim_requests,
+    time_relaxation_request,
+    shift_roster_request,
+    week_roaster,
+    strike_requests,
+    visit_punch_request,
+    workflow_request,
+    shift_roster,
+    requests
+)
 
 # =========================================================
 # Directory Setup
@@ -71,8 +86,8 @@ async def lifespan(app: FastAPI):
 # FastAPI Initialization
 # =========================================================
 app = FastAPI(
-    title="HRMS Super Admin, Payroll, and Data Capture API",
-    description="Unified backend API for HRMS modules including Super Admin, Payroll, and Data Capture.",
+    title="HRMS Super Admin, Payroll, and Data Capture API And Requests",
+    description="Unified backend API for HRMS modules including Super Admin, Payroll, and Data Capture & Requests.",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
@@ -130,6 +145,21 @@ app.include_router(datacapture_loans.router, prefix="/api/v1/datacapture")
 app.include_router(loans.router, prefix="/api/v1/datacapture")
 app.include_router(it_declaration.router, prefix="/api/v1/datacapture")
 app.include_router(tds_returns.router, prefix="/api/v1/datacapture")
+
+# Include routers - Requests
+app.include_router(requests.router, prefix=settings.API_V1_STR)
+app.include_router(missed_punch_request.router, prefix=settings.API_V1_STR)
+app.include_router(leave_request.router, prefix=settings.API_V1_STR)
+app.include_router(compoff.router, prefix=settings.API_V1_STR)
+app.include_router(helpdesk.router, prefix=settings.API_V1_STR)
+app.include_router(claim_requests.router, prefix=settings.API_V1_STR)
+app.include_router(time_relaxation_request.router, prefix=settings.API_V1_STR)
+app.include_router(shift_roster_request.router, prefix=settings.API_V1_STR)
+app.include_router(week_roaster.router, prefix=settings.API_V1_STR)
+app.include_router(strike_requests.router, prefix=settings.API_V1_STR)
+app.include_router(visit_punch_request.router, prefix=settings.API_V1_STR)
+app.include_router(workflow_request.router, prefix=settings.API_V1_STR)
+app.include_router(shift_roster.router, prefix=settings.API_V1_STR)
 
 # =========================================================
 # Root Endpoint
