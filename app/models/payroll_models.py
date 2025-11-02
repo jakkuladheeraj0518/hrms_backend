@@ -4,6 +4,7 @@ from datetime import datetime
 from app.database.base import Base
 
 class Employee(Base):
+    # Use plural table name to match ForeignKey references elsewhere
     __tablename__ = "employees"
     id = Column(Integer, primary_key=True, index=True)
     employee_id = Column(String(50), unique=True, nullable=False)
@@ -28,6 +29,7 @@ class Employee(Base):
 
 class Location(Base):
     __tablename__ = "locations"
+    __table_args__ = {"extend_existing": True}
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
 

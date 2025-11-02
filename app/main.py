@@ -20,6 +20,13 @@ from app.api.v1.routers.superadmin import (
     domains,
 )
 
+from app.api.v1.routers.onboarding import (
+    Addemployee, ApproveAdditions, OfferLetter, offerLetterform,
+    BulkOnboarding, FinalizeAndSendForm, Forms, Newform, OnboardingDashboard,
+    OnboardingFormPartB, OnboardingFormSingle, OnboardingFormTable, OnboardingSettings, Reviewform,dropdowns
+)
+
+
 # =========================================================
 # Import Routers — Payroll
 # =========================================================
@@ -119,6 +126,25 @@ app.include_router(packages.router, prefix="/api/v1/superadmin")
 app.include_router(subscriptions.router, prefix="/api/v1/superadmin")
 app.include_router(transactions.router, prefix="/api/v1/superadmin")
 app.include_router(domains.router, prefix="/api/v1/superadmin")
+
+#onboarding
+
+# include routers
+app.include_router(Addemployee)
+app.include_router(ApproveAdditions)
+app.include_router(OfferLetter)
+app.include_router(offerLetterform)
+app.include_router(BulkOnboarding)
+app.include_router(FinalizeAndSendForm)
+app.include_router(Forms)
+app.include_router(Newform)
+app.include_router(OnboardingDashboard)
+app.include_router(OnboardingFormPartB)
+app.include_router(OnboardingFormSingle)
+app.include_router(OnboardingFormTable)
+app.include_router(OnboardingSettings)
+app.include_router(Reviewform)
+app.include_router(dropdowns.router)
 
 # =========================================================
 # Include Routers — Payroll
