@@ -1,26 +1,6 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from datetime import datetime, date
 from typing import Optional
-
-# Employee Schemas
-class EmployeeBase(BaseModel):
-    employee_code: str
-    name: str
-    email: EmailStr
-    department: Optional[str] = None
-    location: Optional[str] = None
-    cost_center: Optional[str] = None
-    business_unit: Optional[str] = None
-
-class EmployeeCreate(EmployeeBase):
-    pass
-
-class Employee(EmployeeBase):
-    id: int
-    created_at: datetime
-    
-    class Config:
-        from_attributes = True
 
 # Missed Punch Request Schemas
 class MissedPunchRequestBase(BaseModel):

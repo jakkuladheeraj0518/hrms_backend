@@ -4,14 +4,14 @@ from datetime import date, datetime
 from fastapi import HTTPException
 
 from app.repositories.request_repo import (
-    EmployeeRepository, LeaveRequestRepository, MissedPunchRequestRepository,
+    LeaveRequestRepository, MissedPunchRequestRepository,
     CompOffRequestRepository, HelpdeskRequestRepository, ClaimRequestRepository,
     TimeRelaxationRequestRepository, ShiftRosterRequestRepository,
     WeekOffRosterRequestRepository, StrikeExemptionRequestRepository,
     VisitPunchRequestRepository, WorkflowRequestRepository, ShiftRosterRepository
 )
 from app.schemas.request_schema import (
-    EmployeeCreate, LeaveRequestCreate, MissedPunchRequestCreate,
+    LeaveRequestCreate, MissedPunchRequestCreate,
     CompOffRequestCreate, HelpdeskRequestCreate, ClaimRequestCreate,
     TimeRelaxationRequestCreate, ShiftRosterRequestCreate,
     WeekOffRosterRequestCreate, StrikeExemptionRequestCreate,
@@ -50,25 +50,6 @@ class BaseService:
         if not self.repository.delete(db, id):
             raise HTTPException(status_code=404, detail="Record not found")
         return {"message": "Record deleted successfully", "id": id}
-
-
-class EmployeeService(BaseService):
-    def __init__(self):
-        super().__init__(EmployeeRepository())
-    
-    def create_employee(self, db: Session, employee_data: EmployeeCreate):
-        """Create a new employee with validation"""
-        # Check if employee code already exists
-        existing = self.repository.get_by_code(db, employee_data.employee_code)
-        if existing:
-            raise HTTPException(status_code=400, detail="Employee code already exists")
-        
-        # Check if email already exists
-        existing_email = self.repository.get_by_email(db, employee_data.email)
-        if existing_email:
-            raise HTTPException(status_code=400, detail="Email already exists")
-        
-        return self.repository.create(db, **employee_data.dict())
 
 
 class LeaveRequestService(BaseService):

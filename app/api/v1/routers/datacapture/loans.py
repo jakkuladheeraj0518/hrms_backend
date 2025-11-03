@@ -6,7 +6,7 @@ from app.schemas import datacapture_schema as schemas
 from app.models import datacapture as models
 from app.database.session import get_db
 
-router = APIRouter(prefix="/api/datacapture/loans", tags=["Loans"])
+router = APIRouter(prefix="/loans", tags=["Loans"])
 
 # =========================================================
 # CREATE LOAN

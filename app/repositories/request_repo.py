@@ -2,7 +2,6 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_
 from typing import List, Optional, Type, Any
 from datetime import date, datetime
-from app.models.payroll_models import Employee
 from app.models.request_models import (
     MissedPunchRequest, LeaveRequest, CompOffRequest,
     HelpdeskRequest, ClaimRequest, TimeRelaxationRequest,
@@ -55,19 +54,6 @@ class BaseRepository:
     def count(self, db: Session) -> int:
         """Count total records"""
         return db.query(self.model).count()
-
-
-class EmployeeRepository(BaseRepository):
-    def __init__(self):
-        super().__init__(Employee)
-    
-    def get_by_code(self, db: Session, employee_code: str) -> Optional[Employee]:
-        """Get employee by employee code"""
-        return db.query(Employee).filter(Employee.employee_code == employee_code).first()
-    
-    def get_by_email(self, db: Session, email: str) -> Optional[Employee]:
-        """Get employee by email"""
-        return db.query(Employee).filter(Employee.email == email).first()
 
 
 class LeaveRequestRepository(BaseRepository):

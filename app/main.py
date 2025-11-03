@@ -23,7 +23,7 @@ from app.api.v1.routers.superadmin import (
 from app.api.v1.routers.onboarding import (
     Addemployee, ApproveAdditions, OfferLetter, offerLetterform,
     BulkOnboarding, FinalizeAndSendForm, Forms, Newform, OnboardingDashboard,
-    OnboardingFormPartB, OnboardingFormSingle, OnboardingFormTable, OnboardingSettings, Reviewform,dropdowns
+    OnboardingFormPartB, OnboardingFormSingle, OnboardingFormTable, OnboardingSettings, Reviewform,dropdowns,AttachOfferLetterform
 )
 
 
@@ -68,8 +68,7 @@ from app.api.v1.routers.requests import (
     strike_requests,
     visit_punch_request,
     workflow_request,
-    shift_roster,
-    requests
+    shift_roster
 )
 
 # =========================================================
@@ -145,6 +144,7 @@ app.include_router(OnboardingFormTable)
 app.include_router(OnboardingSettings)
 app.include_router(Reviewform)
 app.include_router(dropdowns.router)
+app.include_router(AttachOfferLetterform.router)
 
 # =========================================================
 # Include Routers — Payroll
@@ -173,7 +173,6 @@ app.include_router(it_declaration.router, prefix="/api/v1/datacapture")
 app.include_router(tds_returns.router, prefix="/api/v1/datacapture")
 
 # Include routers - Requests
-app.include_router(requests.router, prefix=settings.API_V1_STR)
 app.include_router(missed_punch_request.router, prefix=settings.API_V1_STR)
 app.include_router(leave_request.router, prefix=settings.API_V1_STR)
 app.include_router(compoff.router, prefix=settings.API_V1_STR)

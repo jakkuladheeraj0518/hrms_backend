@@ -7,7 +7,7 @@ from app.schemas import datacapture_schema as schemas
 from app.services import datacapture_service as service
 
 # Router Configuration
-router = APIRouter(prefix="/api/datacapture/loans", tags=["Data Capture Loans"])
+router = APIRouter(prefix="/data-capture-loans", tags=["Data Capture Loans"])
 
 
 # ---------------------------
