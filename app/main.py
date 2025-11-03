@@ -98,6 +98,25 @@ from app.api.v1.routers.reports import( ai_reports, annual_reports, attendance_r
                                        employee_reports,other_reports,
                                        salary_reports,statutory_reports)
 
+
+
+# =========================================================
+# Import Routers — HR Management
+# =========================================================
+
+from app.api.v1.routers.hr_management import (
+    birthday,
+    work_anniversary,
+    wedding_anniversary,
+    notification,
+    policy,
+    alert,
+    letter,
+)
+
+
+
+
 # =========================================================
 # Import Routers — Separation (added from your main.py)
 # =========================================================
@@ -257,6 +276,22 @@ app.include_router(statutory_reports.router, prefix="/api/v1/reports/statutory",
 app.include_router(annual_reports.router, prefix="/api/v1/reports/annual", tags=["Annual Reports"])
 app.include_router(other_reports.router, prefix="/api/v1/reports/other", tags=["Other Reports"])
 
+
+
+# =========================================================
+# Include Routers — HR Management
+# =========================================================
+
+app.include_router(birthday.router,prefix="/api/v1/hr_management")
+app.include_router(work_anniversary.router,prefix="/api/v1/hr_management")
+app.include_router(wedding_anniversary.router,prefix="/api/v1/hr_management")
+app.include_router(policy.router,prefix="/api/v1/hr_management")
+app.include_router(notification.router,prefix="/api/v1/hr_management")
+app.include_router(alert.router,prefix="/api/v1/hr_management")
+app.include_router(letter.router,prefix="/api/v1/hr_management")
+
+
+
 # =========================================================
 # Custom OpenAPI
 # =========================================================
@@ -295,7 +330,7 @@ def root():
     return {
         "message": "✅ HRMS Unified API is running!",
         "version": "1.0.0",
-        "modules": ["superadmin", "payroll", "datacapture", "attendance", "separation"],
+        "modules": ["superadmin", "payroll", "datacapture", "attendance", "separation","hr_management"],
         "docs": "/docs",
         "redoc": "/redoc",
     }

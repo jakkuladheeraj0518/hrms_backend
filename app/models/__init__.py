@@ -5,6 +5,8 @@ from app.models.superadmin import (
     Package,
     Transaction,
     Subscription
+    
+
 )
 
 # Import onboarding models so package-level `app.models` exposes them
@@ -19,6 +21,23 @@ from app.models.onboarding import (
     OnboardingCandidate,
     FinalizedForm,
 )
+
+
+
+from app.models.hr_management import (
+    Alert,
+    BirthdayGreeting,
+    LetterTemplate, 
+    LetterHistory,
+    Notification,
+    SendOption,
+    Policy,
+    PolicyType,
+    WeddingAnniversaryGreeting,
+    WorkAnniversaryGreeting
+    
+    )
+
 
 __all__ = [
     "Base",
@@ -37,4 +56,21 @@ __all__ = [
     "OnboardingForm",
     "OnboardingCandidate",
     "FinalizedForm",
+
+
+    # HR Management models
+    "Alert",
+    "BirthdayGreeting",
+    "LetterTemplate",
+    "LetterHistory",
+    "Notification",
+    "SendOption",
+    "Policy",
+    "PolicyType",
+    "WeddingAnniversaryGreeting",
+    "WorkAnniversaryGreeting"
 ]
+
+
+
+    
