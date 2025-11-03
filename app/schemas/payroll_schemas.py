@@ -18,7 +18,7 @@ class EmployeeBase(BaseModel):
 class EmployeeCreate(EmployeeBase): pass
 class EmployeeResponse(EmployeeBase):
     id: int
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class PayrollPeriodCreate(BaseModel):
     name: str
@@ -41,7 +41,7 @@ class PayrollPeriodResponse(BaseModel):
     days: int
     status: str
     is_reporting_enabled: bool
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class RecalculationRequest(BaseModel):
     date_from: date
@@ -68,7 +68,7 @@ class RecalculationStatusResponse(BaseModel):
     records_processed: int
     records_updated: int
     started_at: datetime
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class AttendanceRecordResponse(BaseModel):
     id: int
@@ -97,17 +97,17 @@ class AttendancePostRequest(BaseModel):
 class LocationSchema(BaseModel):
     id: Optional[int]
     name: str
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class DepartmentSchema(BaseModel):
     id: Optional[int]
     name: str
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class CostCenterSchema(BaseModel):
     id: Optional[int]
     name: str
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class EmployeeSchema(BaseModel):
     id: Optional[int]
@@ -117,13 +117,13 @@ class EmployeeSchema(BaseModel):
     department_id: Optional[int]
     cost_center_id: Optional[int]
     daily_salary: float
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class LeaveTypeSchema(BaseModel):
     id: Optional[int]
     name: str
     description: Optional[str]
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class LeaveBalanceSchema(BaseModel):
     id: Optional[int]
@@ -131,7 +131,7 @@ class LeaveBalanceSchema(BaseModel):
     leave_type_id: int
     balance_days: float
     balance_as_on: date
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class LeaveEncashmentSchema(BaseModel):
     id: Optional[int]
@@ -143,7 +143,7 @@ class LeaveEncashmentSchema(BaseModel):
     encashment_days: float
     encashment_amount: float
     processed: bool
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class GenerateEncashmentRequest(BaseModel):
     leave_type_id: int
@@ -187,7 +187,7 @@ class BonusRecordResponse(BaseModel):
     base_salary: float
     bonus_amount: float
     status: str
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class BonusSummaryResponse(BaseModel):
     eligible_employees: int
@@ -214,7 +214,7 @@ class SalaryComponentBase(BaseModel):
 class SalaryComponentCreate(SalaryComponentBase): pass
 class SalaryComponentResponse(SalaryComponentBase):
     id: int
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class EmployeeCreate(BaseModel):
     employee_id: str
@@ -230,7 +230,7 @@ class EmployeeCreate(BaseModel):
 
 class EmployeeResponse(EmployeeCreate):
     id: int
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class GratuityCalculationRequest(BaseModel):
     month: str
@@ -254,7 +254,7 @@ class GratuityRecordResponse(BaseModel):
     month: str
     year: int
     is_processed: bool
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class GratuitySummaryResponse(BaseModel):
     eligible_employees: int
@@ -270,7 +270,7 @@ class GratuityConfigurationResponse(BaseModel):
     year_rounding: str
     salary_components: str
     updated_at: datetime
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class HoldSalaryBase(BaseModel):
     employee_id: int
@@ -283,7 +283,7 @@ class HoldSalaryOut(BaseModel):
     employee_name: str
     hold_from: date
     hold_reason: str
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class PayrollRunCreate(BaseModel):
     period: str
@@ -297,7 +297,7 @@ class PayrollRunResponse(BaseModel):
     result: str
     total_net_payroll: float
     status: str
-    class Config: orm_mode = True
+    class Config: from_attributes = True
 
 class PayrollChartResponse(BaseModel):
     labels: List[str]

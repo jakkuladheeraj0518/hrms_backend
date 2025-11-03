@@ -1,6 +1,8 @@
+# app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.openapi.utils import get_openapi
 from contextlib import asynccontextmanager
 import os
 
@@ -20,12 +22,15 @@ from app.api.v1.routers.superadmin import (
     domains,
 )
 
+# =========================================================
+# Import Routers — Onboarding
+# =========================================================
 from app.api.v1.routers.onboarding import (
     Addemployee, ApproveAdditions, OfferLetter, offerLetterform,
     BulkOnboarding, FinalizeAndSendForm, Forms, Newform, OnboardingDashboard,
-    OnboardingFormPartB, OnboardingFormSingle, OnboardingFormTable, OnboardingSettings, Reviewform,dropdowns,AttachOfferLetterform
+    OnboardingFormPartB, OnboardingFormSingle, OnboardingFormTable,
+    OnboardingSettings, Reviewform, dropdowns
 )
-
 
 # =========================================================
 # Import Routers — Payroll
@@ -41,7 +46,7 @@ from app.api.v1.routers.Payroll import (
 )
 
 # =========================================================
-# Import Routers — Data Capture
+# Import Routers — Data Capture & Requests
 # =========================================================
 from app.api.v1.routers.datacapture import (
     salary_variable,
@@ -68,7 +73,22 @@ from app.api.v1.routers.requests import (
     strike_requests,
     visit_punch_request,
     workflow_request,
-    shift_roster
+    shift_roster,
+    router as requests_router
+)
+
+# =========================================================
+# Import Routers — Attendance (from your project)
+# =========================================================
+from app.api.v1.routers.attendance import (
+    attendanceemployee,
+    attendancemodal,
+    calendartable,
+    dailyattendance,
+    dailypunch,
+    leavecorrection,
+    manualattendance,
+    monthlyattendance,
 )
 
 # =========================================================
@@ -77,26 +97,28 @@ from app.api.v1.routers.requests import (
 os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
 
 # =========================================================
-# Application Lifecycle (Startup & Shutdown)
+# Application Lifecycle
 # =========================================================
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Handle startup/shutdown lifecycle"""
-    # Startup: create tables if not exist (optional for Alembic)
     Base.metadata.create_all(bind=engine)
     yield
-    # Shutdown: perform cleanup if needed
     pass
 
 # =========================================================
 # FastAPI Initialization
 # =========================================================
 app = FastAPI(
-    title="HRMS Super Admin, Payroll, and Data Capture API And Requests",
-    description="Unified backend API for HRMS modules including Super Admin, Payroll, and Data Capture & Requests.",
+    title="HRMS Unified API",
+    description=(
+        "Unified backend API for HRMS modules including Super Admin, "
+        "Payroll, Data Capture, Requests, and Attendance Management."
+    ),
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    openapi_url="/openapi.json",
     lifespan=lifespan,
 )
 
@@ -126,9 +148,9 @@ app.include_router(subscriptions.router, prefix="/api/v1/superadmin")
 app.include_router(transactions.router, prefix="/api/v1/superadmin")
 app.include_router(domains.router, prefix="/api/v1/superadmin")
 
-#onboarding
-
-# include routers
+# =========================================================
+# Include Routers — Onboarding
+# =========================================================
 app.include_router(Addemployee)
 app.include_router(ApproveAdditions)
 app.include_router(OfferLetter)
@@ -144,7 +166,6 @@ app.include_router(OnboardingFormTable)
 app.include_router(OnboardingSettings)
 app.include_router(Reviewform)
 app.include_router(dropdowns.router)
-app.include_router(AttachOfferLetterform.router)
 
 # =========================================================
 # Include Routers — Payroll
@@ -172,7 +193,10 @@ app.include_router(loans.router, prefix="/api/v1/datacapture")
 app.include_router(it_declaration.router, prefix="/api/v1/datacapture")
 app.include_router(tds_returns.router, prefix="/api/v1/datacapture")
 
-# Include routers - Requests
+# =========================================================
+# Include Routers — Requests
+# =========================================================
+app.include_router(requests_router, prefix=settings.API_V1_STR)
 app.include_router(missed_punch_request.router, prefix=settings.API_V1_STR)
 app.include_router(leave_request.router, prefix=settings.API_V1_STR)
 app.include_router(compoff.router, prefix=settings.API_V1_STR)
@@ -187,15 +211,56 @@ app.include_router(workflow_request.router, prefix=settings.API_V1_STR)
 app.include_router(shift_roster.router, prefix=settings.API_V1_STR)
 
 # =========================================================
+# Include Routers — Attendance (your project)
+# =========================================================
+app.include_router(attendanceemployee.router, prefix="/api/v1/attendance")
+app.include_router(attendancemodal.router, prefix="/api/v1/attendance")
+app.include_router(calendartable.router, prefix="/api/v1/attendance")
+app.include_router(dailyattendance.router, prefix="/api/v1/attendance")
+app.include_router(dailypunch.router, prefix="/api/v1/attendance")
+app.include_router(leavecorrection.router, prefix="/api/v1/attendance")
+app.include_router(manualattendance.router, prefix="/api/v1/attendance")
+app.include_router(monthlyattendance.router, prefix="/api/v1/attendance")
+
+# =========================================================
+# Custom OpenAPI (from your main.py)
+# =========================================================
+custom_tags_metadata = [
+    {"name": "attendanceemployee", "description": "Manage Employee Records"},
+    {"name": "attendancemodal", "description": "Handle daily attendance modals"},
+    {"name": "calendartable", "description": "Manage holidays and calendar dates"},
+    {"name": "dailyattendance", "description": "Manage employee daily attendance"},
+    {"name": "dailypunch", "description": "Record and view daily punches"},
+    {"name": "leavecorrection", "description": "Manage employee leave corrections"},
+    {"name": "manualattendance", "description": "Add or review manual attendance"},
+    {"name": "monthlyattendance", "description": "Monthly summary of employee attendance"},
+]
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        description=app.description,
+        routes=app.routes,
+    )
+    openapi_schema["tags"] = custom_tags_metadata
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
+
+# =========================================================
 # Root Endpoint
 # =========================================================
 @app.get("/")
 def root():
     """Root endpoint"""
     return {
-        "message": "✅ HRMS API for Super Admin, Payroll, and Data Capture is running!",
+        "message": "✅ HRMS Unified API is running!",
         "version": "1.0.0",
-        "modules": ["superadmin", "payroll", "datacapture"],
+        "modules": ["superadmin", "payroll", "datacapture", "attendance"],
         "docs": "/docs",
         "redoc": "/redoc",
     }
@@ -207,3 +272,8 @@ def root():
 def health_check():
     """Health check endpoint"""
     return {"status": "healthy", "database": "connected"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)

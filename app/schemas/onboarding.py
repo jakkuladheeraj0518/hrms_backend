@@ -7,37 +7,37 @@ from datetime import date, datetime
 class LocationBase(BaseModel):
     location: str
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class DepartmentBase(BaseModel):
     department: str
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class CostCenterBase(BaseModel):
     costcenter: str
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class GradeBase(BaseModel):
     grade: str
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class DesignationBase(BaseModel):
     designation: str
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ShiftPolicyBase(BaseModel):
     shift_policy: str
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class WeekOffPolicyBase(BaseModel):
     week_off_policy: str
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class EmployeeBase(BaseModel):
     first_name: str
@@ -82,7 +82,7 @@ class EmployeeResponse(BaseModel):
     approved: bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ---------------- Candidate Schemas ----------------form backend
 class Document(BaseModel):
@@ -184,7 +184,7 @@ class CandidateResponse(CandidateBase):
     created_at: Optional[datetime]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 
@@ -211,7 +211,7 @@ class BulkCandidateResponse(BulkCandidateCreate):
     created_at: Optional[datetime]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 from pydantic import BaseModel
 from typing import Optional
@@ -242,7 +242,7 @@ class OnboardingFormResponse(BaseModel):
     finalized: bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 #attachoffer letter----
 
@@ -277,7 +277,7 @@ class OfferLetterResponse(OfferLetterBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 #finalize and send forms 
 class FinalizeRequest(BaseModel):
@@ -308,7 +308,7 @@ class OnboardingCandidateUpdate(OnboardingCandidateBase):
 class OnboardingCandidateResponse(OnboardingCandidateBase):
     id: int
     class Config:
-        orm_mode = True
+        from_attributes = True
 class ReviewFormSchema(BaseModel):
     candidate_name: str
     email: str | None
@@ -322,7 +322,7 @@ class ReviewFormSchema(BaseModel):
     form_status: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class OnboardingSettingsResponse(BaseModel):
     fields: Dict[str, bool]
@@ -418,7 +418,7 @@ class OfferLetterFormResponse(OfferLetterFormBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Schema for reading templates
 class Template(BaseModel):
@@ -427,7 +427,7 @@ class Template(BaseModel):
     content: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Schema for creating templates
 class TemplateCreate(BaseModel):
