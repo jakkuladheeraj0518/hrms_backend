@@ -1,7 +1,7 @@
 import os
 import json
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List, Union
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from app.utils.helpers import parse_date, ensure_upload_dir
@@ -85,24 +85,25 @@ async def create_candidate(
 
     # Aadhaar (text + upload)
     aadhaarNumber: Optional[str] = Form(None),
-    aadhaarFile: Optional[UploadFile] = File(None),
+    aadhaarFile: Optional[Union[UploadFile, str]] = File(None),
 
     # PAN (text + upload)
     panNumber: Optional[str] = Form(None),
-    panFile: Optional[UploadFile] = File(None),
+    panFile: Optional[Union[UploadFile, str]] = File(None),
 
     db: Session = Depends(get_db),
 ):
     aadhaar_path, pan_path = None, None
 
     # Save uploaded files (if any)
-    if aadhaarFile:
+    # Only process uploaded file objects; clients may send an empty string for file fields
+    if isinstance(aadhaarFile, UploadFile):
         aadhaar_filename = f"{name.replace(' ', '_')}_aadhaar_{aadhaarFile.filename}"
         aadhaar_path = os.path.join(UPLOAD_DIR, aadhaar_filename)
         with open(aadhaar_path, "wb") as f:
             f.write(await aadhaarFile.read())
 
-    if panFile:
+    if isinstance(panFile, UploadFile):
         pan_filename = f"{name.replace(' ', '_')}_pan_{panFile.filename}"
         pan_path = os.path.join(UPLOAD_DIR, pan_filename)
         with open(pan_path, "wb") as f:
@@ -217,11 +218,11 @@ async def update_candidate(
 
     # Aadhaar (text + upload)
     aadhaarNumber: Optional[str] = Form(None),
-    aadhaarFile: Optional[UploadFile] = File(None),
+    aadhaarFile: Optional[Union[UploadFile, str]] = File(None),
 
     # PAN (text + upload)
     panNumber: Optional[str] = Form(None),
-    panFile: Optional[UploadFile] = File(None),
+    panFile: Optional[Union[UploadFile, str]] = File(None),
 
     db: Session = Depends(get_db),
 ):
@@ -230,14 +231,14 @@ async def update_candidate(
         raise HTTPException(status_code=404, detail="Candidate not found")
 
     # Save uploaded files if provided and update file path fields
-    if aadhaarFile:
+    if isinstance(aadhaarFile, UploadFile):
         aadhaar_filename = f"{(name or candidate.name).replace(' ', '_')}_aadhaar_{aadhaarFile.filename}"
         aadhaar_path = os.path.join(UPLOAD_DIR, aadhaar_filename)
         with open(aadhaar_path, "wb") as f:
             f.write(await aadhaarFile.read())
         candidate.aadhaarFile = aadhaar_path
 
-    if panFile:
+    if isinstance(panFile, UploadFile):
         pan_filename = f"{(name or candidate.name).replace(' ', '_')}_pan_{panFile.filename}"
         pan_path = os.path.join(UPLOAD_DIR, pan_filename)
         with open(pan_path, "wb") as f:

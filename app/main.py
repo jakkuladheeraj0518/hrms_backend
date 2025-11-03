@@ -29,7 +29,7 @@ from app.api.v1.routers.onboarding import (
     Addemployee, ApproveAdditions, OfferLetter, offerLetterform,
     BulkOnboarding, FinalizeAndSendForm, Forms, Newform, OnboardingDashboard,
     OnboardingFormPartB, OnboardingFormSingle, OnboardingFormTable,
-    OnboardingSettings, Reviewform, dropdowns
+    OnboardingSettings, Reviewform, dropdowns, AttachOfferLetterform
 )
 
 # =========================================================
@@ -166,6 +166,7 @@ app.include_router(OnboardingFormTable)
 app.include_router(OnboardingSettings)
 app.include_router(Reviewform)
 app.include_router(dropdowns.router)
+app.include_router(AttachOfferLetterform.router)
 
 # =========================================================
 # Include Routers — Payroll

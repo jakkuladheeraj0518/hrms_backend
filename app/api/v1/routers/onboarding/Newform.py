@@ -1,4 +1,5 @@
 import os
+from typing import Optional, Union
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from app.database.session import get_db
@@ -19,8 +20,8 @@ async def create_or_update_form(
     candidate_name: str = Form(...),
     candidate_email: str = Form(...),
     candidate_phone: str = Form(...),
-    policies_file: UploadFile = File(None),
-    offer_letter_file: UploadFile = File(None),
+    policies_file: Optional[Union[UploadFile, str]] = File(None),
+    offer_letter_file: Optional[Union[UploadFile, str]] = File(None),
     db: Session = Depends(get_db)
 ):
     """
@@ -38,7 +39,9 @@ async def create_or_update_form(
     )
 
     # Handle Policies file upload
-    if policies_file:
+    # Some clients send an empty string for file fields; only treat
+    # the parameter as an uploaded file when it's an UploadFile instance.
+    if isinstance(policies_file, UploadFile):
         policies_path = os.path.join(UPLOAD_DIR, f"policies_{policies_file.filename}")
         with open(policies_path, "wb") as f:
             f.write(await policies_file.read())
@@ -47,7 +50,7 @@ async def create_or_update_form(
         new_form.policies = "No policies file uploaded"
 
     # Handle Offer Letter file upload
-    if offer_letter_file:
+    if isinstance(offer_letter_file, UploadFile):
         offer_path = os.path.join(UPLOAD_DIR, f"offerletter_{offer_letter_file.filename}")
         with open(offer_path, "wb") as f:
             f.write(await offer_letter_file.read())

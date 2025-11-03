@@ -24,6 +24,12 @@ router = APIRouter(
 # ================================
 @router.post("/attach", response_model=OfferLetterResponse)
 def attach_offer_letter(data: OfferLetterCreate, db: Session = Depends(get_db)):
+	# Ensure the candidate exists before creating the OfferLetter to avoid
+	# a database-level foreign key violation which results in a 500 error.
+	candidate = db.query(models.Candidate).filter(models.Candidate.id == data.candidate_id).first()
+	if not candidate:
+		raise HTTPException(status_code=404, detail="Candidate not found; cannot attach offer letter")
+
 	try:
 		new_offer = models.OfferLetter(
 			candidate_id=data.candidate_id,
