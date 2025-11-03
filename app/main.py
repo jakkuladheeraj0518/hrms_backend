@@ -32,6 +32,8 @@ from app.api.v1.routers.onboarding import (
     OnboardingSettings, Reviewform, dropdowns, AttachOfferLetterform
 )
 
+
+
 # =========================================================
 # Import Routers — Payroll
 # =========================================================
@@ -90,6 +92,13 @@ from app.api.v1.routers.attendance import (
     manualattendance,
     monthlyattendance,
 )
+
+# =========================================================
+# Import Routers — Reports
+# =========================================================
+from app.api.v1.routers.reports import( ai_reports, annual_reports, attendance_reports,
+                                       employee_reports,other_reports,
+                                       salary_reports,statutory_reports)
 
 # =========================================================
 # Directory Setup
@@ -222,6 +231,18 @@ app.include_router(dailypunch.router, prefix="/api/v1/attendance")
 app.include_router(leavecorrection.router, prefix="/api/v1/attendance")
 app.include_router(manualattendance.router, prefix="/api/v1/attendance")
 app.include_router(monthlyattendance.router, prefix="/api/v1/attendance")
+
+# =========================================================
+# Include Routers — Reports
+# =========================================================
+
+app.include_router(ai_reports.router, prefix="/api/v1/reports/ai", tags=["AI Reports"])
+app.include_router(salary_reports.router, prefix="/api/v1/reports/salary", tags=["Salary Reports"])
+app.include_router(attendance_reports.router, prefix="/api/v1/reports/attendance", tags=["Attendance Reports"])
+app.include_router(employee_reports.router, prefix="/api/v1/reports/employee", tags=["Employee Reports"])
+app.include_router(statutory_reports.router, prefix="/api/v1/reports/statutory", tags=["Statutory Reports"])
+app.include_router(annual_reports.router, prefix="/api/v1/reports/annual", tags=["Annual Reports"])
+app.include_router(other_reports.router, prefix="/api/v1/reports/other", tags=["Other Reports"])
 
 # =========================================================
 # Custom OpenAPI (from your main.py)
