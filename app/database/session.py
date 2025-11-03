@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from typing import Generator
 from app.config import settings
+from app.database.base import Base
 
 # ==========================
 # DATABASE ENGINE
@@ -12,6 +13,9 @@ engine = create_engine(
     pool_size=10,
     max_overflow=20,
 )
+
+# Create all tables on startup
+Base.metadata.create_all(bind=engine)
 
 # ==========================
 # SESSION LOCAL

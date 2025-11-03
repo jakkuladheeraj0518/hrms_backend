@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     # ==========================
     # DATABASE SETTINGS
     # ==========================
-    DATABASE_URL: str = "postgresql://postgres:462246@localhost:5432/hrms_report"
+    DATABASE_URL: str = "postgresql://postgres:1234@localhost:5432/superadmin_db"
 
     # ==========================
     # APP / PROJECT

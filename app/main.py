@@ -32,8 +32,6 @@ from app.api.v1.routers.onboarding import (
     OnboardingSettings, Reviewform, dropdowns, AttachOfferLetterform
 )
 
-
-
 # =========================================================
 # Import Routers — Payroll
 # =========================================================
@@ -101,6 +99,14 @@ from app.api.v1.routers.reports import( ai_reports, annual_reports, attendance_r
                                        salary_reports,statutory_reports)
 
 # =========================================================
+# Import Routers — Separation (added from your main.py)
+# =========================================================
+from app.api.v1.routers.separation.initiate_exit import router as initiate_exit_router
+from app.api.v1.routers.separation.pending_exit import router as pending_exit_router
+from app.api.v1.routers.separation.separation_dashboard import router as dashboard_router
+from app.api.v1.routers.separation.ex_employees import router as ex_employees_router
+
+# =========================================================
 # Directory Setup
 # =========================================================
 os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
@@ -122,7 +128,7 @@ app = FastAPI(
     title="HRMS Unified API",
     description=(
         "Unified backend API for HRMS modules including Super Admin, "
-        "Payroll, Data Capture, Requests, and Attendance Management."
+        "Payroll, Data Capture, Requests, Attendance, and Separation Management."
     ),
     version="1.0.0",
     docs_url="/docs",
@@ -221,7 +227,7 @@ app.include_router(workflow_request.router, prefix=settings.API_V1_STR)
 app.include_router(shift_roster.router, prefix=settings.API_V1_STR)
 
 # =========================================================
-# Include Routers — Attendance (your project)
+# Include Routers — Attendance
 # =========================================================
 app.include_router(attendanceemployee.router, prefix="/api/v1/attendance")
 app.include_router(attendancemodal.router, prefix="/api/v1/attendance")
@@ -233,9 +239,16 @@ app.include_router(manualattendance.router, prefix="/api/v1/attendance")
 app.include_router(monthlyattendance.router, prefix="/api/v1/attendance")
 
 # =========================================================
+# Include Routers — Separation
+# =========================================================
+app.include_router(initiate_exit_router, prefix=settings.API_V1_STR + "/separation", tags=["Initiate Exit"])
+app.include_router(pending_exit_router, prefix=settings.API_V1_STR + "/separation", tags=["Pending Exits"])
+app.include_router(ex_employees_router, prefix=settings.API_V1_STR + "/separation", tags=["Ex-Employees"])
+app.include_router(dashboard_router, prefix=settings.API_V1_STR + "/separation", tags=["Dashboard"])
+
+# =========================================================
 # Include Routers — Reports
 # =========================================================
-
 app.include_router(ai_reports.router, prefix="/api/v1/reports/ai", tags=["AI Reports"])
 app.include_router(salary_reports.router, prefix="/api/v1/reports/salary", tags=["Salary Reports"])
 app.include_router(attendance_reports.router, prefix="/api/v1/reports/attendance", tags=["Attendance Reports"])
@@ -245,7 +258,7 @@ app.include_router(annual_reports.router, prefix="/api/v1/reports/annual", tags=
 app.include_router(other_reports.router, prefix="/api/v1/reports/other", tags=["Other Reports"])
 
 # =========================================================
-# Custom OpenAPI (from your main.py)
+# Custom OpenAPI
 # =========================================================
 custom_tags_metadata = [
     {"name": "attendanceemployee", "description": "Manage Employee Records"},
@@ -282,7 +295,7 @@ def root():
     return {
         "message": "✅ HRMS Unified API is running!",
         "version": "1.0.0",
-        "modules": ["superadmin", "payroll", "datacapture", "attendance"],
+        "modules": ["superadmin", "payroll", "datacapture", "attendance", "separation"],
         "docs": "/docs",
         "redoc": "/redoc",
     }
