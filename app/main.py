@@ -1,4 +1,4 @@
-# app/main.py
+# app/main.py (MERGED)
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -6,9 +6,15 @@ from fastapi.openapi.utils import get_openapi
 from contextlib import asynccontextmanager
 import os
 
+# Database
 from app.database.base import Base
 from app.database.session import engine
+
+# Settings
 from app.config import settings
+
+# Auth router (you provided this import)
+from app.api.v1.routers import auth
 
 # =========================================================
 # Import Routers — Super Admin
@@ -78,7 +84,7 @@ from app.api.v1.routers.requests import (
 )
 
 # =========================================================
-# Import Routers — Attendance (from your project)
+# Import Routers — Attendance
 # =========================================================
 from app.api.v1.routers.attendance import (
     attendanceemployee,
@@ -94,16 +100,15 @@ from app.api.v1.routers.attendance import (
 # =========================================================
 # Import Routers — Reports
 # =========================================================
-from app.api.v1.routers.reports import( ai_reports, annual_reports, attendance_reports,
-                                       employee_reports,other_reports,
-                                       salary_reports,statutory_reports)
-
-
+from app.api.v1.routers.reports import (
+    ai_reports, annual_reports, attendance_reports,
+    employee_reports, other_reports,
+    salary_reports, statutory_reports
+)
 
 # =========================================================
 # Import Routers — HR Management
 # =========================================================
-
 from app.api.v1.routers.hr_management import (
     birthday,
     work_anniversary,
@@ -114,11 +119,8 @@ from app.api.v1.routers.hr_management import (
     letter,
 )
 
-
-
-
 # =========================================================
-# Import Routers — Separation (added from your main.py)
+# Import Routers — Separation
 # =========================================================
 from app.api.v1.routers.separation.initiate_exit import router as initiate_exit_router
 from app.api.v1.routers.separation.pending_exit import router as pending_exit_router
@@ -126,30 +128,33 @@ from app.api.v1.routers.separation.separation_dashboard import router as dashboa
 from app.api.v1.routers.separation.ex_employees import router as ex_employees_router
 
 # =========================================================
-# Directory Setup
+# Directory Setup (uploads)
 # =========================================================
 os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
 
 # =========================================================
-# Application Lifecycle
+# Application lifecycle - create tables on startup
 # =========================================================
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Handle startup/shutdown lifecycle"""
+    # Ensure all models are imported in their modules so Base.metadata knows them.
+    # Creating tables here ensures tables exist before app serves requests.
     Base.metadata.create_all(bind=engine)
     yield
-    pass
+    # (Optional) any shutdown cleanup can go here
+
 
 # =========================================================
 # FastAPI Initialization
 # =========================================================
 app = FastAPI(
-    title="HRMS Unified API",
+    title=getattr(settings, "PROJECT_NAME", "HRMS Unified API"),
     description=(
         "Unified backend API for HRMS modules including Super Admin, "
         "Payroll, Data Capture, Requests, Attendance, and Separation Management."
     ),
-    version="1.0.0",
+    version=getattr(settings, "VERSION", "1.0.0"),
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url="/openapi.json",
@@ -161,16 +166,22 @@ app = FastAPI(
 # =========================================================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=getattr(settings, "CORS_ORIGINS", ["*"]),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # =========================================================
-# Static Files
+# Serve static uploads
 # =========================================================
 app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
+
+# =========================================================
+# Include Routers — Auth
+# =========================================================
+# mounts auth at /api/v1/auth
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 
 # =========================================================
 # Include Routers — Super Admin
@@ -231,19 +242,19 @@ app.include_router(tds_returns.router, prefix="/api/v1/datacapture")
 # =========================================================
 # Include Routers — Requests
 # =========================================================
-app.include_router(requests_router, prefix=settings.API_V1_STR)
-app.include_router(missed_punch_request.router, prefix=settings.API_V1_STR)
-app.include_router(leave_request.router, prefix=settings.API_V1_STR)
-app.include_router(compoff.router, prefix=settings.API_V1_STR)
-app.include_router(helpdesk.router, prefix=settings.API_V1_STR)
-app.include_router(claim_requests.router, prefix=settings.API_V1_STR)
-app.include_router(time_relaxation_request.router, prefix=settings.API_V1_STR)
-app.include_router(shift_roster_request.router, prefix=settings.API_V1_STR)
-app.include_router(week_roaster.router, prefix=settings.API_V1_STR)
-app.include_router(strike_requests.router, prefix=settings.API_V1_STR)
-app.include_router(visit_punch_request.router, prefix=settings.API_V1_STR)
-app.include_router(workflow_request.router, prefix=settings.API_V1_STR)
-app.include_router(shift_roster.router, prefix=settings.API_V1_STR)
+app.include_router(requests_router, prefix=getattr(settings, "API_V1_STR", "/api/v1"))
+app.include_router(missed_punch_request.router, prefix=getattr(settings, "API_V1_STR", "/api/v1"))
+app.include_router(leave_request.router, prefix=getattr(settings, "API_V1_STR", "/api/v1"))
+app.include_router(compoff.router, prefix=getattr(settings, "API_V1_STR", "/api/v1"))
+app.include_router(helpdesk.router, prefix=getattr(settings, "API_V1_STR", "/api/v1"))
+app.include_router(claim_requests.router, prefix=getattr(settings, "API_V1_STR", "/api/v1"))
+app.include_router(time_relaxation_request.router, prefix=getattr(settings, "API_V1_STR", "/api/v1"))
+app.include_router(shift_roster_request.router, prefix=getattr(settings, "API_V1_STR", "/api/v1"))
+app.include_router(week_roaster.router, prefix=getattr(settings, "API_V1_STR", "/api/v1"))
+app.include_router(strike_requests.router, prefix=getattr(settings, "API_V1_STR", "/api/v1"))
+app.include_router(visit_punch_request.router, prefix=getattr(settings, "API_V1_STR", "/api/v1"))
+app.include_router(workflow_request.router, prefix=getattr(settings, "API_V1_STR", "/api/v1"))
+app.include_router(shift_roster.router, prefix=getattr(settings, "API_V1_STR", "/api/v1"))
 
 # =========================================================
 # Include Routers — Attendance
@@ -260,10 +271,10 @@ app.include_router(monthlyattendance.router, prefix="/api/v1/attendance")
 # =========================================================
 # Include Routers — Separation
 # =========================================================
-app.include_router(initiate_exit_router, prefix=settings.API_V1_STR + "/separation", tags=["Initiate Exit"])
-app.include_router(pending_exit_router, prefix=settings.API_V1_STR + "/separation", tags=["Pending Exits"])
-app.include_router(ex_employees_router, prefix=settings.API_V1_STR + "/separation", tags=["Ex-Employees"])
-app.include_router(dashboard_router, prefix=settings.API_V1_STR + "/separation", tags=["Dashboard"])
+app.include_router(initiate_exit_router, prefix=getattr(settings, "API_V1_STR", "/api/v1") + "/separation", tags=["Initiate Exit"])
+app.include_router(pending_exit_router, prefix=getattr(settings, "API_V1_STR", "/api/v1") + "/separation", tags=["Pending Exits"])
+app.include_router(ex_employees_router, prefix=getattr(settings, "API_V1_STR", "/api/v1") + "/separation", tags=["Ex-Employees"])
+app.include_router(dashboard_router, prefix=getattr(settings, "API_V1_STR", "/api/v1") + "/separation", tags=["Dashboard"])
 
 # =========================================================
 # Include Routers — Reports
@@ -276,24 +287,19 @@ app.include_router(statutory_reports.router, prefix="/api/v1/reports/statutory",
 app.include_router(annual_reports.router, prefix="/api/v1/reports/annual", tags=["Annual Reports"])
 app.include_router(other_reports.router, prefix="/api/v1/reports/other", tags=["Other Reports"])
 
-
-
 # =========================================================
 # Include Routers — HR Management
 # =========================================================
-
-app.include_router(birthday.router,prefix="/api/v1/hr_management")
-app.include_router(work_anniversary.router,prefix="/api/v1/hr_management")
-app.include_router(wedding_anniversary.router,prefix="/api/v1/hr_management")
-app.include_router(policy.router,prefix="/api/v1/hr_management")
-app.include_router(notification.router,prefix="/api/v1/hr_management")
-app.include_router(alert.router,prefix="/api/v1/hr_management")
-app.include_router(letter.router,prefix="/api/v1/hr_management")
-
-
+app.include_router(birthday.router, prefix="/api/v1/hr_management")
+app.include_router(work_anniversary.router, prefix="/api/v1/hr_management")
+app.include_router(wedding_anniversary.router, prefix="/api/v1/hr_management")
+app.include_router(policy.router, prefix="/api/v1/hr_management")
+app.include_router(notification.router, prefix="/api/v1/hr_management")
+app.include_router(alert.router, prefix="/api/v1/hr_management")
+app.include_router(letter.router, prefix="/api/v1/hr_management")
 
 # =========================================================
-# Custom OpenAPI
+# Custom OpenAPI Tags Metadata
 # =========================================================
 custom_tags_metadata = [
     {"name": "attendanceemployee", "description": "Manage Employee Records"},
@@ -322,28 +328,30 @@ def custom_openapi():
 app.openapi = custom_openapi
 
 # =========================================================
-# Root Endpoint
+# Root Endpoint (single unified root)
 # =========================================================
 @app.get("/")
 def root():
     """Root endpoint"""
     return {
-        "message": "✅ HRMS Unified API is running!",
-        "version": "1.0.0",
+        "message": f"✅ {getattr(settings, 'PROJECT_NAME', 'HRMS Unified API')} is running!",
+        "version": getattr(settings, "VERSION", "1.0.0"),
         "modules": ["superadmin", "payroll", "datacapture", "attendance", "separation","hr_management"],
         "docs": "/docs",
         "redoc": "/redoc",
     }
 
 # =========================================================
-# Health Check
+# Health Check (single unified health)
 # =========================================================
 @app.get("/health")
 def health_check():
     """Health check endpoint"""
     return {"status": "healthy", "database": "connected"}
 
-
+# =========================================================
+# Run with Uvicorn
+# =========================================================
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)

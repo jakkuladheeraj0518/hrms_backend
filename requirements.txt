@@ -1,26 +1,28 @@
 # --- FastAPI & ASGI Server ---
-fastapi
-uvicorn
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
 
 # --- Database & ORM ---
-SQLAlchemy
-psycopg2-binary
-alembic
+SQLAlchemy==2.0.23
+psycopg2-binary==2.9.9
+alembic==1.12.1
 
 # --- Configuration & Validation ---
-python-dotenv
-pydantic
-pydantic-settings
-email-validator
+python-dotenv==1.0.0
+pydantic[email]==2.5.0
+pydantic-settings==2.1.0
+email-validator==2.1.0
 
 # --- Authentication & Security ---
-python-jose[cryptography]
-passlib[bcrypt]
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
 
 # --- File Uploads ---
-python-multipart
+python-multipart==0.0.6
 
 # --- External Integrations ---
 twilio
 requests
 pandas
+
+passlib[argon2]
