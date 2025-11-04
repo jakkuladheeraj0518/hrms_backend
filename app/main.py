@@ -132,6 +132,18 @@ from app.api.v1.routers.separation.ex_employees import router as ex_employees_ro
 # =========================================================
 os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
 
+#BulkUpdates
+from app.api.v1.routers.bulk_updatesrouters.employee_records_router import router as employee_records_router
+from app.api.v1.routers.bulk_updatesrouters.salary_revision_router import router as salary_revision_router
+from app.api.v1.routers.bulk_updatesrouters.salary_deductions_router import router as salary_deductions_router
+from app.api.v1.routers.bulk_updatesrouters.employee_biometric_router import router as employee_biometric_router
+from app.api.v1.routers.bulk_updatesrouters.employee_address_router import router as employee_address_router
+from app.api.v1.routers.bulk_updatesrouters.employee_bank_router import router as employee_bank_router
+from app.api.v1.routers.bulk_updatesrouters.bulk_updates_router import router as bulk_updates_router
+from app.api.v1.routers.bulk_updatesrouters.work_profilerouter import router as work_profile_router
+
+
+
 # =========================================================
 # Application lifecycle - create tables on startup
 # =========================================================
@@ -297,6 +309,16 @@ app.include_router(policy.router, prefix="/api/v1/hr_management")
 app.include_router(notification.router, prefix="/api/v1/hr_management")
 app.include_router(alert.router, prefix="/api/v1/hr_management")
 app.include_router(letter.router, prefix="/api/v1/hr_management")
+
+#BulkUpdates
+app.include_router(employee_records_router, prefix="/api/v1")
+app.include_router(salary_deductions_router, prefix="/api/v1")
+app.include_router(salary_revision_router, prefix="/api/v1")
+app.include_router(employee_biometric_router, prefix="/api/v1")
+app.include_router(employee_address_router, prefix="/api/v1")
+app.include_router(employee_bank_router, prefix="/api/v1")
+app.include_router(bulk_updates_router, prefix="/api/v1")
+app.include_router(work_profile_router)
 
 # =========================================================
 # Custom OpenAPI Tags Metadata
