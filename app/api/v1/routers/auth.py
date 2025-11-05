@@ -4,6 +4,9 @@ from app.api.deps import get_db
 from app.schemas.auth import UserCreate, UserLogin, LoginResponse, UserResponse
 from app.services.auth import AuthService
 from app.dependencies.auth import get_current_active_user
+from fastapi import BackgroundTasks
+from app.schemas.auth import ForgotPasswordRequest, ResetPasswordRequest
+from app.services.auth import AuthService
 
 router = APIRouter()
 
@@ -37,6 +40,30 @@ def get_current_user_info(
     Get current user information
     """
     return current_user
+
+@router.post("/forgot-password")
+def forgot_password(
+    request: ForgotPasswordRequest,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db)
+):
+    """
+    Generate a password reset token and send it via email.
+    """
+    auth_service = AuthService(db)
+    return auth_service.initiate_password_reset(request.email, background_tasks)
+
+
+@router.post("/reset-password")
+def reset_password(
+    request: ResetPasswordRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Reset password using the token sent to email.
+    """
+    auth_service = AuthService(db)
+    return auth_service.reset_password(request.token, request.new_password)
 
 @router.post("/logout")
 def logout(
