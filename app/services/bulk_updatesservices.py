@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.models import EmployeeBulkUpdatesBiometric
+from app.models.bulk_updatesmodels import EmployeeBulkUpdatesBiometric
 from app.repositories.bulk_updatesrepositories import EmployeeBiometricRepository
 from app.schemas.bulk_updatesschemas import EmployeeBiometricOut, EmployeeBiometricCreate, EmployeeBiometricUpdate
 

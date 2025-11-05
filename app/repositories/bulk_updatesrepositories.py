@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import Optional, List
-from app.models import EmployeeBulkUpdates, EmployeeBulkUpdatesBiometric
+from app.models.bulk_updatesmodels import EmployeeBulkUpdates, EmployeeBulkUpdatesBiometric
 
 
 class EmployeeBiometricRepository:
@@ -55,7 +55,7 @@ from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from app.models import (
+from app.models.bulk_updatesmodels import (
     EmployeeBulkUpdates,
     BulkLocation,
     BulkDepartment,
@@ -151,7 +151,7 @@ class EmployeeAddressRepository:
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
-from app.models import EmployeeBulkUpdates, EmployeeBulkUpdatesBank
+from app.models.bulk_updatesmodels import EmployeeBulkUpdates, EmployeeBulkUpdatesBank
 
 
 class EmployeeBankRepository:

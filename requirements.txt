@@ -26,3 +26,5 @@ requests
 pandas
 
 passlib[argon2]
+
+openpyxl
